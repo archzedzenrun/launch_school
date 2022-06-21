@@ -1,0 +1,1 @@
+# The major difference is hashes store key value pairs. The value is accessed while referencing the key while the value in an array is accessed by referencing the index.

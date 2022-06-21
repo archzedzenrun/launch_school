@@ -1,0 +1,1 @@
+# In case 1 x will print 3.  Case 2 will return an error because x isnt defined as a local variable.

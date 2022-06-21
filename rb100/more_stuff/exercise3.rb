@@ -1,0 +1,1 @@
+# Exception handling allows you to "rescue" your program so that it can continue after an exception occurs.

@@ -1,0 +1,1 @@
+# This error is happening because it is missing the & in (block), which is needed for a block to be passed as a method parameter.
