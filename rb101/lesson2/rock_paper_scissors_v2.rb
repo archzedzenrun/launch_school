@@ -10,6 +10,16 @@ def winner?(player, computer)
     (player == 'scissors' && computer == 'paper')
 end
 
+def display_results(player, computer)
+  if winner?(player, computer)
+    prompt('You won!')
+  elsif winner?(computer, player)
+    prompt('Computer won!')
+  else
+    prompt("It's a tie!")
+  end
+end
+
 loop do
   choice = ''
   loop do
@@ -22,18 +32,11 @@ loop do
   computer_choice = VALID_CHOICES.sample
 
   prompt("You chose #{choice}. Computer chose #{computer_choice}.")
-
-  if winner?(choice, computer_choice)
-    prompt('You won!')
-  elsif winner?(computer_choice, choice)
-    prompt('You lost!')
-  else
-    prompt("It's a tie!")
-  end
-
-  prompt("Would you like to play again?")
+  display_results(choice, computer_choice)
+  
+  prompt("Would you like to play again? Y or N")
   play_again = gets.chomp
-  break unless play_again.downcase.start_with?('y')
+  break unless play_again.downcase == 'y'
 end
 
 prompt('Thanks for playing. Goodbye.')
