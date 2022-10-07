@@ -14,20 +14,20 @@
   puts stringy(9) == '101010101'
   puts stringy(4) == '1010'
   puts stringy(7) == '1010101'
-  
+
 # DATA STRUCTURE
   - String will be stored in an array.
-  
+
 # ALGORITHM
   - Initialize a variable that contains an empty array.
-  - Create a loop that will add the string "1" followed by the string "0" 
+  - Create a loop that will add the string "1" followed by the string "0"
     to that variable until it is the size of the input integer.
-  - Join the elements of the array into a string with no spaces between 
-    the characters. 
+  - Join the elements of the array into a string with no spaces between
+    the characters.
   - Return the string.
-  
+
 # CODE
-=end 
+=end
 
 def stringy(integer)
   string = []
@@ -44,3 +44,12 @@ puts stringy(6) == '101010'
 puts stringy(9) == '101010101'
 puts stringy(4) == '1010'
 puts stringy(7) == '1010101'
+
+# Further exploration (second attempt)
+
+def stringy(integer, default = 1)
+  case default
+  when 1 then (1..integer).map { |num| num.odd? ? 1 : 0 }.join
+  when 0 then (1..integer).map { |num| num.odd? ? 0 : 1 }.join
+  end
+end

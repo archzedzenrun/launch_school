@@ -8,24 +8,24 @@
   Implicit requirements:
   Questions:
 
-# EXAMPLES 
+# EXAMPLES
   puts reverse_sentence('Hello World') == 'World Hello'
   puts reverse_sentence('Reverse these words') == 'words these Reverse'
   puts reverse_sentence('') == ''
   puts reverse_sentence('    ') == '' # Any number of spaces results in ''
-  
+
 # DATA STRUCTURE
   - Values will be temporarily held in an array
-  
+
 # ALGORITHM
   - Separate the words from the input string into an array
   - Remove the last element of the array
   - Move that element to the beginning of a new array
   - After each element has been moved, convert the array back to a string
   - Return the string
-  
+
 # CODE
-=end 
+=end
 
 def reverse_sentence(string)
   array = string.split
@@ -38,3 +38,11 @@ puts reverse_sentence('Hello World') == 'World Hello'
 puts reverse_sentence('Reverse these words') == 'words these Reverse'
 puts reverse_sentence('') == ''
 puts reverse_sentence('    ') == '' # Any number of spaces results in ''
+
+=begin
+def reverse_sentence(string)
+  string.split.each_with_object([]) do |str, array|
+    array.unshift(str)
+  end.join(' ')
+end
+=end
