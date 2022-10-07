@@ -11,7 +11,7 @@
 # EXAMPLES
   What is your name? Bob
   Hello Bob.
-  
+
   What is your name? Bob!
   HELLO BOB. WHY ARE WE SCREAMING?
 
@@ -22,7 +22,7 @@
   - Greet the user
   - Yell back to the user if the user writes "name!"
 # CODE
-=end 
+=end
 
 puts "What is your name?"
 name = gets.chomp
@@ -32,3 +32,9 @@ if name.end_with?('!')
 else
   puts "Hello #{name}"
 end
+
+# Revisit
+
+puts "What is your name?"
+name = gets.chomp
+puts name[-1] == "!" ? "HELLO #{name.chop.upcase}. WHY ARE WE SCREAMING?" : "Hello #{name}"

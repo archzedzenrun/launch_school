@@ -10,14 +10,14 @@
 
 # EXAMPLES
   Teddy is 69 years old!
-  
+
 # DATA STRUCTURE
 
 # ALGORITHM
   - Generate a random number between 20 and 200
   - Print out that number in a string
 # CODE
-=end 
+=end
 
 age = rand(20..200)
 puts "Teddy is #{age} years old!"
@@ -31,4 +31,10 @@ if name.empty?
   puts "Teddy is #{age} years old!"
 else
   puts "#{name} is #{age} years old!"
-end 
+end
+
+# Second attempt
+
+puts "Enter a name:"
+name = gets.chomp
+puts "#{name.empty? ? "Teddy" : name} is #{rand(20..200)} years old!"
