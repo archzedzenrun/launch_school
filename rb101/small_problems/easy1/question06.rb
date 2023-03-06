@@ -15,18 +15,18 @@
   puts reverse_words('Professional')          # => lanoisseforP
   puts reverse_words('Walk around the block') # => Walk dnuora the kcolb
   puts reverse_words('Launch School')         # => hcnuaL loohcS
-  
+
 # DATA STRUCTURE
   - String values will be held in an array.
-  
+
 # ALGORITHM
   - Split the words of the input string into an array.
   - Use transformation on the array to reverse each element that has 5 or more characters.
   - If the element has less than 5 characters, dont do anything to it.
   - Convert the array back to a string and return the string.
-  
+
 # CODE
-=end 
+=end
 
 def reverse_words(string)
   reversed_words = string.split.map do |word|
@@ -42,3 +42,9 @@ end
 puts reverse_words('Professional')          # => lanoisseforP
 puts reverse_words('Walk around the block') # => Walk dnuora the kcolb
 puts reverse_words('Launch School')         # => hcnuaL loohcS
+
+# Revisit
+
+def reverse_words(string)
+  string.split.map { |word| word.size >= 5 ? word.reverse : word }.join(' ')
+end

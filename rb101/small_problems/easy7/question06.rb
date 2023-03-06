@@ -36,3 +36,14 @@ end
 p staggered_case('I Love Launch School!')  == 'I lOvE lAuNcH sChOoL!'
 p staggered_case('ALL CAPS') == 'AlL cApS'
 p staggered_case('ignore 77 the 444 numbers') == 'IgNoRe 77 ThE 444 nUmBeRs'
+
+# Revisit
+
+def staggered_case(string)
+  toggle = false
+
+  string.downcase.chars.map do |char|
+    toggle = !toggle if ('a'..'z').include?(char)
+    toggle ? char.upcase : char
+  end.join
+end

@@ -23,16 +23,22 @@
   - Add the count of each element to the hash
   - Iterate over each element of the hash and print the keys and values
 # CODE
-=end 
+=end
 
 def count_occurrences(array)
   hash = {}
   array.uniq.each { |element| hash[element] = array.count(element) }
   hash.each { |key, value| puts "#{key} => #{value}" }
-end 
-  
-  
+end
+
+
 vehicles = ['car', 'car', 'truck', 'car', 'SUV', 'truck',
             'motorcycle', 'motorcycle', 'car', 'truck']
-            
+
 count_occurrences(vehicles)
+
+#Revisit
+
+def count_occurrences(array)
+  array.uniq.each { |car| puts "#{car} => #{array.count(car)}" }
+end
