@@ -1,3 +1,6 @@
+require 'yaml'
+MESSAGES = YAML.load_file('messages.yaml')
+
 module Formatable
   def prompt(message)
     puts MESSAGES[message]
