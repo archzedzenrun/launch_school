@@ -1,0 +1,23 @@
+game_rules: |
+            Welcome to Rock, Paper, Scissors, Lizard, Spock!
+
+            Here are the Rules:
+
+            - Rock crushes Scissors and Lizards.
+            - Paper covers Rock and disproves Spock.
+            - Scissors cut Paper and decapitates Lizards.
+            - Lizard eats Paper and poisons Spock.
+            - Spock smashes Scissors and vaporizes Rock.
+
+            First to reach a score of 3 wins!
+
+            Press ENTER to begin:
+
+name?: "What is your name?"
+empty?: "Sorry, name can't be empty."
+invalid: "Invalid input."
+choice: "Please choose rock, paper, scissors, lizard, or spock:"
+tie: "It's a tie!"
+
+play_again?: "Would you like to play again? (y/n)"
+goodbye: "Thanks for playing Rock, Paper, Scissors, Lizard, Spock. Good bye!"
