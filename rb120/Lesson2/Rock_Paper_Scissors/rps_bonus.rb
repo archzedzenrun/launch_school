@@ -1,11 +1,9 @@
 require 'yaml'
 MESSAGES = YAML.load_file('messages.yaml')
 
-module Formatable
-  def prompt(message)
-    puts MESSAGES[message]
-  end
+MAX_SCORE = 5
 
+module Formatable
   def new_line
     puts "\n"
   end
@@ -23,9 +21,74 @@ module Formatable
   end
 end
 
-module Displayable
-  MAX_SCORE = 5
+module Promptable
+  def prompt(message)
+    puts MESSAGES[message]
+  end
 
+  def prompt_player_name
+    your_name = ' '
+    loop do
+      prompt('name?')
+      your_name = gets.chomp
+      break unless your_name.strip == ''
+      clear_screen
+      prompt('empty?')
+    end
+    self.name = your_name.strip
+  end
+
+  def prompt_player_choice
+    choice = nil
+    loop do
+      prompt('choice')
+      choice = gets.chomp
+      break if Move::MOVES_HASH.keys.include?(choice.downcase)
+      prompt('invalid')
+    end
+    choice
+  end
+
+  def prompt_choose_opponent
+    choice = ''
+    loop do
+      prompt('choose_opponent')
+      choice = gets.chomp
+      break if ['', '1', '2', '3', '4', '5'].include?(choice)
+      clear_screen
+      prompt('invalid')
+    end
+    assign_opponent(choice)
+    choice == '' ? display_random_opponent : display_selected_opponent
+  end
+
+  def prompt_move_history?
+    answer = ''
+    loop do
+      new_line
+      prompt('move_history?')
+      answer = gets.chomp
+      break if ['y', 'n'].include?(answer.downcase)
+      prompt('invalid')
+    end
+    answer.downcase == 'y'
+  end
+
+  def prompt_play_again?
+    answer = nil
+    loop do
+      prompt('play_again?')
+      answer = gets.chomp
+      break if ['y', 'n'].include?(answer.downcase)
+      prompt('invalid')
+    end
+    return false if answer.downcase == 'n'
+    reset_score if answer.downcase == 'y'
+    clear_screen
+  end
+end
+
+module Displayable
   def display_selected_opponent
     clear_screen
     puts "You selected #{bot.name}!"
@@ -138,6 +201,7 @@ end
 
 class Player
   include Formatable
+  include Promptable
 
   attr_accessor :move, :name, :score, :move_history, :win_history
 
@@ -165,30 +229,11 @@ end
 
 class Human < Player
   def set_name
-    your_name = ' '
-    loop do
-      prompt('name?')
-      your_name = gets.chomp
-      break unless your_name.strip == ''
-      clear_screen
-      prompt('empty?')
-    end
-    self.name = your_name.strip
-  end
-
-  def enter_choice
-    choice = nil
-    loop do
-      prompt('choice')
-      choice = gets.chomp
-      break if Move::MOVES_HASH.keys.include?(choice.downcase)
-      prompt('invalid')
-    end
-    choice
+    prompt_player_name
   end
 
   def choose
-    choice = enter_choice.downcase
+    choice = prompt_player_choice.downcase
     self.move = Move.new(choice)
     @@human_current_move = choice
     store_move(move)
@@ -256,25 +301,13 @@ end
 
 class RPSGame
   include Formatable
+  include Promptable
   include Displayable
 
   attr_accessor :human, :bot
 
   def initialize
     @human = Human.new
-  end
-
-  def choose_opponent
-    choice = ''
-    loop do
-      prompt('choose_opponent')
-      choice = gets.chomp
-      break if ['', '1', '2', '3', '4', '5'].include?(choice)
-      clear_screen
-      prompt('invalid')
-    end
-    assign_opponent(choice)
-    choice == '' ? display_random_opponent : display_selected_opponent
   end
 
   def assign_opponent(choice)
@@ -324,31 +357,6 @@ class RPSGame
      bot.name, bot.move_history, bot.win_history]
   end
 
-  def move_history?
-    answer = ''
-    loop do
-      new_line
-      prompt('move_history?')
-      answer = gets.chomp
-      break if ['y', 'n'].include?(answer.downcase)
-      prompt('invalid')
-    end
-    answer.downcase == 'y'
-  end
-
-  def play_again?
-    answer = nil
-    loop do
-      prompt('play_again?')
-      answer = gets.chomp
-      break if ['y', 'n'].include?(answer.downcase)
-      prompt('invalid')
-    end
-    return false if answer.downcase == 'n'
-    reset_score if answer.downcase == 'y'
-    clear_screen
-  end
-
   def play
     loop do
       clear_screen
@@ -364,11 +372,11 @@ class RPSGame
   def game
     display_welcome_message
     loop do
-      choose_opponent
+      prompt_choose_opponent
       play
       display_results
-      display_move_history if move_history?
-      break unless play_again?
+      display_move_history if prompt_move_history?
+      break unless prompt_play_again?
     end
     display_goodbye_message
   end
