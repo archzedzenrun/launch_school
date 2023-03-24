@@ -2,7 +2,6 @@ game_rules: |
             Welcome to Rock, Paper, Scissors, Lizard, Spock!
 
             Here are the Rules:
-
             - Rock crushes Scissors and Lizards.
             - Paper covers Rock and disproves Spock.
             - Scissors cut Paper and decapitates Lizards.
@@ -14,12 +13,13 @@ game_rules: |
             Press ENTER to begin:
 choose_opponent: |
                  Press ENTER to play against a random opponent.
+
                  Or press:
-                 1 for Bishop
-                 2 for Chappie
-                 3 for Chucky
-                 4 for Optimus
-                 5 for Vision
+                 1 for Bishop (Likes to play fair)
+                 2 for Chappie (Has a hard time thinking for himself)
+                 3 for Chucky (Tendencies include cheating and sharp objects)
+                 4 for Optimus (Tough as a rock)
+                 5 for Vision (The supreme - Good luck)
 name?: "What is your name?"
 empty?: "Sorry, name can't be empty."
 invalid: "Invalid input."

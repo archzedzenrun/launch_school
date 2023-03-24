@@ -74,15 +74,15 @@ end
 
 class Human < Player
   def set_name
-    your_name = ''
+    your_name = ' '
     loop do
       prompt('name?')
       your_name = gets.chomp
-      break unless your_name.empty?
+      break unless your_name.strip == ''
       clear_screen
       prompt('empty?')
     end
-    self.name = your_name
+    self.name = your_name.strip
   end
 
   def enter_choice
@@ -111,14 +111,14 @@ class Bot < Player
   end
 end
 
-class Bishop < Bot # Most human like. Standard opponent.
+class Bishop < Bot # Standard opponent.
   def choose
     self.move = Move::MOVES_HASH.keys.sample
     store_move(move)
   end
 end
 
-class Chappie < Bot # Smart enough to play but cant make own decisions.
+class Chappie < Bot # Mimics the players move.
   def choose
     self.move = @@human_current_move
     store_move(move)
@@ -137,22 +137,22 @@ class Optimus < Bot # Has a head start but always picks rock.
   end
 end
 
-class Chucky < Bot # Sometimes cheats by adding 1 to his score, likes scissors.
+class Chucky < Bot # Sometimes adds 1 to his score, likely to pick scissors.
   def choose
     cheat_score
-    choices = ['rock', 'rock']
-    6.times { choices << 'scissors' }
+    choices = ['paper', 'paper', 'spock', 'spock']
+    12.times { choices << 'scissors' }
     self.move = choices.sample
     store_move(move)
   end
 
   def cheat_score
     num = rand(10)
-    self.score += 1 if (0..3).include?(num)
+    self.score += 1 if (0..4).include?(num)
   end
 end
 
-class Vision < Bot # Vision knows. And picks accordingly.
+class Vision < Bot # Unbeatable
   def choose
     potential_moves = []
     Move::MOVES_HASH.each do |move, value_arr|
@@ -245,16 +245,14 @@ class RPSGame
 
   def human_won
     human.score += 1
-    human.store_win(human.score)
-    bot.store_win(bot.score)
+    store_wins
     small_pause
     puts "#{human.name} won!"
   end
 
   def bot_won
     bot.score += 1
-    human.store_win(human.score)
-    bot.store_win(bot.score)
+    store_wins
     small_pause
     puts "#{bot.name} won!"
   end
@@ -262,10 +260,14 @@ class RPSGame
   def tie
     human.score += 1
     bot.score += 1
-    human.store_win(human.score)
-    bot.store_win(bot.score)
+    store_wins
     small_pause
     prompt('tie')
+  end
+
+  def store_wins
+    human.store_win(human.score)
+    bot.store_win(bot.score)
   end
 
   def display_score
