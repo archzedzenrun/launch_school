@@ -23,6 +23,93 @@ module Formatable
   end
 end
 
+module Displayable
+  MAX_SCORE = 5
+
+  def display_selected_opponent
+    clear_screen
+    puts "You selected #{bot.name}!"
+    pause
+  end
+
+  def display_random_opponent
+    clear_screen
+    puts "Your random opponent will be..."
+    small_pause
+    puts "#{bot.name}!"
+    pause
+  end
+
+  def display_welcome_message
+    clear_screen
+    prompt('game_rules')
+    gets
+    clear_screen
+  end
+
+  def display_moves
+    puts "#{human.name} chose: #{human.move}"
+    puts "#{bot.name} chose: #{bot.move}"
+    calculate_winner
+  end
+
+  def display_human_won
+    human.increment_score
+    store_wins
+    small_pause
+    puts "#{human.name} won!"
+  end
+
+  def display_bot_won
+    bot.increment_score
+    store_wins
+    small_pause
+    puts "#{bot.name} won!"
+  end
+
+  def display_tie
+    human.increment_score
+    bot.increment_score
+    store_wins
+    small_pause
+    prompt('tie')
+  end
+
+  def display_score
+    puts "Current score:"
+    puts "#{human.name} - #{human.score}"
+    puts "#{bot.name} - #{bot.score}"
+    pause
+  end
+
+  def display_results
+    puts "Game results:"
+    if human.score >= MAX_SCORE && bot.score >= MAX_SCORE
+      prompt('tie')
+    elsif human.score >= MAX_SCORE
+      puts "#{human.name} is the winner!"
+    elsif bot.score >= MAX_SCORE
+      puts "#{bot.name} is the winner!"
+    end
+  end
+
+  def display_move_history
+    clear_screen
+    info = move_history_info
+    info[1].each_with_index do |move, idx|
+      moves = "#{info[0]}: #{move}, #{info[3]}: #{info[4][idx]}, "
+      score = "Score: #{info[2][idx]} - #{info[5][idx]}"
+      puts "Turn #{idx + 1} => " + moves + score
+    end
+    new_line
+  end
+
+  def display_goodbye_message
+    clear_screen
+    prompt('goodbye')
+  end
+end
+
 class Move
   MOVES_HASH = { 'rock' => ['scissors', 'lizard'],
                  'paper' => ['rock', 'spock'],
@@ -69,6 +156,10 @@ class Player
 
   def store_win(win)
     win_history << win
+  end
+
+  def increment_score
+    self.score += 1
   end
 end
 
@@ -148,7 +239,7 @@ class Chucky < Bot # Sometimes adds 1 to his score, likely to pick scissors.
 
   def cheat_score
     num = rand(10)
-    self.score += 1 if (0..4).include?(num)
+    increment_score if (0..3).include?(num)
   end
 end
 
@@ -165,8 +256,7 @@ end
 
 class RPSGame
   include Formatable
-
-  MAX_SCORE = 5
+  include Displayable
 
   attr_accessor :human, :bot
 
@@ -184,7 +274,7 @@ class RPSGame
       prompt('invalid')
     end
     assign_opponent(choice)
-    choice == '' ? introduce_random_choice : introduce_selected_choice
+    choice == '' ? display_random_opponent : display_selected_opponent
   end
 
   def assign_opponent(choice)
@@ -199,65 +289,16 @@ class RPSGame
     end
   end
 
-  def introduce_selected_choice
-    clear_screen
-    puts "You selected #{bot.name}!"
-    pause
-  end
-
-  def introduce_random_choice
-    clear_screen
-    puts "Your opponent will be..."
-    small_pause
-    puts "#{bot.name}!"
-    pause
-  end
-
-  def display_welcome_message
-    clear_screen
-    prompt('game_rules')
-    gets
-    clear_screen
-  end
-
-  def display_moves
-    puts "#{human.name} chose: #{human.move}"
-    puts "#{bot.name} chose: #{bot.move}"
-    display_winner
-  end
-
-  def display_winner
+  def calculate_winner
     if human.move > bot.move
-      human_won
+      display_human_won
     elsif human.move < bot.move
-      bot_won
+      display_bot_won
     else
-      tie
+      display_tie
     end
     pause
     clear_screen
-  end
-
-  def human_won
-    human.score += 1
-    store_wins
-    small_pause
-    puts "#{human.name} won!"
-  end
-
-  def bot_won
-    bot.score += 1
-    store_wins
-    small_pause
-    puts "#{bot.name} won!"
-  end
-
-  def tie
-    human.score += 1
-    bot.score += 1
-    store_wins
-    small_pause
-    prompt('tie')
   end
 
   def store_wins
@@ -265,26 +306,8 @@ class RPSGame
     bot.store_win(bot.score)
   end
 
-  def display_score
-    puts "Current score:"
-    puts "#{human.name} - #{human.score}"
-    puts "#{bot.name} - #{bot.score}"
-    pause
-  end
-
   def max_score_reached?
     human.score >= MAX_SCORE || bot.score >= MAX_SCORE
-  end
-
-  def results
-    puts "Tournament results:"
-    if human.score >= MAX_SCORE && bot.score >= MAX_SCORE
-      prompt('tie')
-    elsif human.score >= MAX_SCORE
-      puts "#{human.name} is the winner!"
-    elsif bot.score >= MAX_SCORE
-      puts "#{bot.name} is the winner!"
-    end
   end
 
   def reset_score
@@ -294,6 +317,11 @@ class RPSGame
     human.win_history = []
     bot.move_history = []
     bot.win_history = []
+  end
+
+  def move_history_info
+    [human.name, human.move_history, human.win_history,
+     bot.name, bot.move_history, bot.win_history]
   end
 
   def move_history?
@@ -308,22 +336,6 @@ class RPSGame
     answer.downcase == 'y'
   end
 
-  def display_move_history
-    clear_screen
-    info = move_history_info
-    info[1].each_with_index do |move, idx|
-      score = "Score: #{info[2][idx]} - #{info[5][idx]}"
-      moves = "#{info[0]}: #{move}, #{info[3]}: #{info[4][idx]}, "
-      puts "Turn #{idx + 1} => " + moves + score
-    end
-    new_line
-  end
-
-  def move_history_info
-    [human.name, human.move_history, human.win_history,
-     bot.name, bot.move_history, bot.win_history]
-  end
-
   def play_again?
     answer = nil
     loop do
@@ -335,11 +347,6 @@ class RPSGame
     return false if answer.downcase == 'n'
     reset_score if answer.downcase == 'y'
     clear_screen
-  end
-
-  def display_goodbye_message
-    clear_screen
-    prompt('goodbye')
   end
 
   def play
@@ -359,7 +366,7 @@ class RPSGame
     loop do
       choose_opponent
       play
-      results
+      display_results
       display_move_history if move_history?
       break unless play_again?
     end
