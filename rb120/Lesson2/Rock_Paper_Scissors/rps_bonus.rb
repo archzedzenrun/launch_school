@@ -111,7 +111,7 @@ class Bot < Player
   end
 end
 
-class Bishop < Bot # Most human like, standard opponent.
+class Bishop < Bot # Most human like. Standard opponent.
   def choose
     self.move = Move::MOVES_HASH.keys.sample
     store_move(move)
