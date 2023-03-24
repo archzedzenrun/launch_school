@@ -220,11 +220,6 @@ class RPSGame
     clear_screen
   end
 
-  def display_goodbye_message
-    clear_screen
-    prompt('goodbye')
-  end
-
   def display_moves
     puts "#{human.name} chose: #{human.move}"
     puts "#{bot.name} chose: #{bot.move}"
@@ -340,6 +335,11 @@ class RPSGame
     return false if answer.downcase == 'n'
     reset_score if answer.downcase == 'y'
     clear_screen
+  end
+
+  def display_goodbye_message
+    clear_screen
+    prompt('goodbye')
   end
 
   def play
