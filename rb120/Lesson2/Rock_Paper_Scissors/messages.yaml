@@ -22,7 +22,7 @@ choose_opponent: |
                  5 for Optimus (Tough as a rock)
                  6 for Vision (The supreme)
 name?: "What is your name?"
-empty?: "Sorry, name can't be empty."
+empty?: "Sorry, name can't be empty or more than 10 characters."
 invalid: "Invalid input."
 choice: "Please choose rock, paper, scissors, lizard, or spock:"
 tie: "It's a tie!"

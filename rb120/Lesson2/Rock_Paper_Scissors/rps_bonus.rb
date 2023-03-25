@@ -31,7 +31,7 @@ module Promptable
     loop do
       prompt('name?')
       your_name = gets.chomp
-      break unless your_name.strip == ''
+      break unless your_name.strip == '' || your_name.size > 10
       clear_screen
       prompt('empty?')
     end
