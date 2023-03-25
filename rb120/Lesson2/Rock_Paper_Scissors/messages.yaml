@@ -16,10 +16,11 @@ choose_opponent: |
 
                  Or press:
                  1 for Bishop (Likes to play fair)
-                 2 for Chappie (Has a hard time thinking for himself)
-                 3 for Chucky (Tendencies include cheating and sharp objects)
-                 4 for Optimus (Tough as a rock)
-                 5 for Vision (The supreme - Good luck)
+                 2 for C3PO (Aims to please)
+                 3 for Chappie (Has a hard time thinking for himself)
+                 4 for Chucky (Tendencies include cheating and sharp objects)
+                 5 for Optimus (Tough as a rock)
+                 6 for Vision (The supreme)
 name?: "What is your name?"
 empty?: "Sorry, name can't be empty."
 invalid: "Invalid input."

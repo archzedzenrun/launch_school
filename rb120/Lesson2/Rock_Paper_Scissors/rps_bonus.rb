@@ -54,7 +54,7 @@ module Promptable
     loop do
       prompt('choose_opponent')
       choice = gets.chomp
-      break if ['', '1', '2', '3', '4', '5'].include?(choice)
+      break if ['', '1', '2', '3', '4', '5', '6'].include?(choice)
       clear_screen
       prompt('invalid')
     end
@@ -232,7 +232,7 @@ class Human < Player
     prompt_player_name
   end
 
-  def choose
+  def choose_move
     choice = prompt_player_choice.downcase
     self.move = Move.new(choice)
     @@human_current_move = choice
@@ -248,33 +248,42 @@ class Bot < Player
 end
 
 class Bishop < Bot # Standard opponent.
-  def choose
+  def choose_move
     self.move = Move::MOVES_HASH.keys.sample
     store_move(move)
   end
 end
 
+class C3PO < Bot # Always loses
+  def choose_move
+    self.move = Move::MOVES_HASH[@@human_current_move].sample
+    store_move(move)
+  end
+end
+
 class Chappie < Bot # Mimics the players move.
-  def choose
+  def choose_move
     self.move = @@human_current_move
     store_move(move)
   end
 end
 
-class Optimus < Bot # Has a head start but always picks rock.
+class Optimus < Bot # Has a head start, usually picks rock.
   def initialize
     super
     @score = 3
   end
 
-  def choose
-    self.move = 'rock'
+  def choose_move
+    choices = ['paper', 'scissors', 'lizard', 'spock']
+    12.times { choices << 'rock' }
+    self.move = choices.sample
     store_move(move)
   end
 end
 
 class Chucky < Bot # Sometimes adds 1 to his score, likely to pick scissors.
-  def choose
+  def choose_move
     cheat_score
     choices = ['paper', 'paper', 'spock', 'spock']
     12.times { choices << 'scissors' }
@@ -288,8 +297,8 @@ class Chucky < Bot # Sometimes adds 1 to his score, likely to pick scissors.
   end
 end
 
-class Vision < Bot # Unbeatable
-  def choose
+class Vision < Bot # Always wins
+  def choose_move
     potential_moves = []
     Move::MOVES_HASH.each do |move, value_arr|
       potential_moves << move if value_arr.include?(@@human_current_move)
@@ -311,15 +320,9 @@ class RPSGame
   end
 
   def assign_opponent(choice)
-    bots = [Bishop.new, Chappie.new, Chucky.new, Optimus.new, Vision.new]
-    case choice
-    when '1' then @bot = bots[0]
-    when '2' then @bot = bots[1]
-    when '3' then @bot = bots[2]
-    when '4' then @bot = bots[3]
-    when '5' then @bot = bots[4]
-    when ''  then @bot = bots.sample
-    end
+    bots = [Bishop.new, C3PO.new, Chappie.new,
+            Chucky.new, Optimus.new, Vision.new]
+    @bot = choice.empty? ? bots.sample : bots[choice.to_i - 1]
   end
 
   def calculate_winner
@@ -360,8 +363,8 @@ class RPSGame
   def play
     loop do
       clear_screen
-      human.choose
-      bot.choose
+      human.choose_move
+      bot.choose_move
       display_moves
       display_score
       break if max_score_reached?
