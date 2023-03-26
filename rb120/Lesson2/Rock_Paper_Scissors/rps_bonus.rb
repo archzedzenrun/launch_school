@@ -1,5 +1,4 @@
 require 'yaml'
-require 'pry'
 MESSAGES = YAML.load_file('messages.yaml')
 
 MAX_SCORE = 5
