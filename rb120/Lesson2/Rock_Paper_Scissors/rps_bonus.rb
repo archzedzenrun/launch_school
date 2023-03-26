@@ -1,4 +1,5 @@
 require 'yaml'
+require 'pry'
 MESSAGES = YAML.load_file('messages.yaml')
 
 MAX_SCORE = 5
@@ -26,6 +27,13 @@ module Promptable
     puts MESSAGES[message]
   end
 
+  def prompt_invalid_input
+    clear_screen
+    prompt('invalid')
+    new_line
+    small_pause
+  end
+
   def prompt_player_name
     your_name = ' '
     loop do
@@ -34,29 +42,31 @@ module Promptable
       break unless your_name.strip == '' || your_name.size > 10
       clear_screen
       prompt('empty?')
+      small_pause
     end
     self.name = your_name.strip
   end
 
   def prompt_player_choice
-    choice = nil
+    valid_moves = Move::MOVES_HASH.keys
+    choice = ''
     loop do
       prompt('choice')
       choice = gets.chomp
-      break if Move::MOVES_HASH.keys.include?(choice.downcase)
-      prompt('invalid')
+      break if ['', '1', '2', '3', '4', '5'].include?(choice)
+      prompt_invalid_input
     end
-    choice
+    choice == '' ? valid_moves.sample : valid_moves[choice.to_i - 1]
   end
 
   def prompt_choose_opponent
+    clear_screen
     choice = ''
     loop do
       prompt('choose_opponent')
       choice = gets.chomp
       break if ['', '1', '2', '3', '4', '5', '6'].include?(choice)
-      clear_screen
-      prompt('invalid')
+      prompt_invalid_input
     end
     assign_opponent(choice)
     choice == '' ? display_random_opponent : display_selected_opponent
@@ -65,11 +75,10 @@ module Promptable
   def prompt_move_history?
     answer = ''
     loop do
-      new_line
       prompt('move_history?')
       answer = gets.chomp
       break if ['y', 'n'].include?(answer.downcase)
-      prompt('invalid')
+      prompt_invalid_input
     end
     answer.downcase == 'y'
   end
@@ -80,11 +89,10 @@ module Promptable
       prompt('play_again?')
       answer = gets.chomp
       break if ['y', 'n'].include?(answer.downcase)
-      prompt('invalid')
+      prompt_invalid_input
     end
     return false if answer.downcase == 'n'
     reset_score if answer.downcase == 'y'
-    clear_screen
   end
 end
 
@@ -113,27 +121,19 @@ module Displayable
   def display_moves
     puts "#{human.name} chose: #{human.move}"
     puts "#{bot.name} chose: #{bot.move}"
-    calculate_winner
   end
 
   def display_human_won
-    human.increment_score
-    store_wins
     small_pause
     puts "#{human.name} won!"
   end
 
   def display_bot_won
-    bot.increment_score
-    store_wins
     small_pause
     puts "#{bot.name} won!"
   end
 
   def display_tie
-    human.increment_score
-    bot.increment_score
-    store_wins
     small_pause
     prompt('tie')
   end
@@ -154,6 +154,7 @@ module Displayable
     elsif bot.score >= MAX_SCORE
       puts "#{bot.name} is the winner!"
     end
+    new_line
   end
 
   def display_move_history
@@ -214,15 +215,15 @@ class Player
     @win_history = []
   end
 
-  def store_move(move)
+  def store_move!(move)
     move_history << move
   end
 
-  def store_win(win)
+  def store_win!(win)
     win_history << win
   end
 
-  def increment_score
+  def increment_score!
     self.score += 1
   end
 end
@@ -233,10 +234,10 @@ class Human < Player
   end
 
   def choose_move
-    choice = prompt_player_choice.downcase
+    choice = prompt_player_choice
     self.move = Move.new(choice)
     @@human_current_move = choice
-    store_move(move)
+    store_move!(move)
     clear_screen
   end
 end
@@ -250,21 +251,21 @@ end
 class Bishop < Bot # Standard opponent.
   def choose_move
     self.move = Move::MOVES_HASH.keys.sample
-    store_move(move)
+    store_move!(move)
   end
 end
 
 class C3PO < Bot # Always loses
   def choose_move
     self.move = Move::MOVES_HASH[@@human_current_move].sample
-    store_move(move)
+    store_move!(move)
   end
 end
 
 class Chappie < Bot # Mimics the players move.
   def choose_move
     self.move = @@human_current_move
-    store_move(move)
+    store_move!(move)
   end
 end
 
@@ -278,22 +279,24 @@ class Optimus < Bot # Has a head start, usually picks rock.
     choices = ['paper', 'scissors', 'lizard', 'spock']
     12.times { choices << 'rock' }
     self.move = choices.sample
-    store_move(move)
+    store_move!(move)
   end
 end
 
 class Chucky < Bot # Sometimes adds 1 to his score, likely to pick scissors.
   def choose_move
-    cheat_score
+    cheat_score!
     choices = ['paper', 'paper', 'spock', 'spock']
     12.times { choices << 'scissors' }
     self.move = choices.sample
-    store_move(move)
+    store_move!(move)
   end
 
-  def cheat_score
+  private
+
+  def cheat_score!
     num = rand(10)
-    increment_score if (0..3).include?(num)
+    increment_score! if (0..3).include?(num)
   end
 end
 
@@ -304,7 +307,7 @@ class Vision < Bot # Always wins
       potential_moves << move if value_arr.include?(@@human_current_move)
     end
     self.move = potential_moves.sample
-    store_move(move)
+    store_move!(move)
   end
 end
 
@@ -319,6 +322,33 @@ class RPSGame
     @human = Human.new
   end
 
+  def game
+    display_welcome_message
+    loop do
+      prompt_choose_opponent
+      play
+      display_results
+      display_move_history if prompt_move_history?
+      break unless prompt_play_again?
+    end
+    display_goodbye_message
+  end
+
+  private
+
+  def play
+    loop do
+      clear_screen
+      human.choose_move
+      bot.choose_move
+      display_moves
+      calculate_winner
+      display_score
+      break if max_score_reached?
+    end
+    clear_screen
+  end
+
   def assign_opponent(choice)
     bots = [Bishop.new, C3PO.new, Chappie.new,
             Chucky.new, Optimus.new, Vision.new]
@@ -327,19 +357,38 @@ class RPSGame
 
   def calculate_winner
     if human.move > bot.move
-      display_human_won
+      human_won!
     elsif human.move < bot.move
-      display_bot_won
+      bot_won!
     else
-      display_tie
+      tie_game!
     end
     pause
     clear_screen
   end
 
-  def store_wins
-    human.store_win(human.score)
-    bot.store_win(bot.score)
+  def human_won!
+    human.increment_score!
+    store_win!
+    display_human_won
+  end
+
+  def bot_won!
+    bot.increment_score!
+    store_win!
+    display_bot_won
+  end
+
+  def tie_game!
+    human.increment_score!
+    bot.increment_score!
+    store_win!
+    display_tie
+  end
+
+  def store_win!
+    human.store_win!(human.score)
+    bot.store_win!(bot.score)
   end
 
   def max_score_reached?
@@ -358,30 +407,6 @@ class RPSGame
   def move_history_info
     [human.name, human.move_history, human.win_history,
      bot.name, bot.move_history, bot.win_history]
-  end
-
-  def play
-    loop do
-      clear_screen
-      human.choose_move
-      bot.choose_move
-      display_moves
-      display_score
-      break if max_score_reached?
-    end
-    clear_screen
-  end
-
-  def game
-    display_welcome_message
-    loop do
-      prompt_choose_opponent
-      play
-      display_results
-      display_move_history if prompt_move_history?
-      break unless prompt_play_again?
-    end
-    display_goodbye_message
   end
 end
 
