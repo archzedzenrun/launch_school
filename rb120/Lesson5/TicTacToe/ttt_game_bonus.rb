@@ -1,4 +1,4 @@
-MAX_SCORE = 3
+MAX_SCORE = 5
 VALID_MARKERS = ('A'..'Z').to_a
 
 module Displayable
@@ -28,18 +28,22 @@ module Displayable
 
   def display_welcome_message
     clear_screen
-    puts "Welcome to Tic Tac Toe!"
+    puts "Hello #{human.name}, welcome to Tic Tac Toe!"
     new_line
-    puts "First to win #{MAX_SCORE} rounds wins the game!"
-    puts "Your opponent will be #{computer.name}!"
+    puts "Here are the rules:"
+    puts "-The first player to get 3 of their marks in a row wins the round."
+    puts "-If the board is full and no player has won, the round is a tie."
+    puts "-The first player to win #{MAX_SCORE} rounds wins the game!"
     new_line
   end
 
   def display_first_to_move
+    puts "Your opponent will be #{computer.name}!"
+    new_line
     puts "Who will go first? (Turns will alternate after the first round)"
     puts "Press:"
-    puts "1 for Human"
-    puts "2 for Computer"
+    puts "1 for #{human.name}"
+    puts "2 for #{computer.name}"
     puts "3 for Random"
   end
 
@@ -90,7 +94,7 @@ module Displayable
 
   def display_goodbye_message
     clear_screen
-    puts "Thanks for playing Tic Tac Toe! Goodbye!"
+    puts "Thanks for playing Tic Tac Toe! Goodbye #{human.name}!"
   end
 end
 
@@ -235,7 +239,7 @@ class Human < Player
   def prompt_choose_marker
     answer = nil
     loop do
-      puts "Choose any alphabetic letter as a marker:"
+      puts "Choose any alphabetic letter as your marker:"
       answer = gets.chomp
       break if VALID_MARKERS.include?(answer.upcase)
       display_invalid_input
@@ -256,14 +260,6 @@ class Human < Player
     set_move(board, human, square)
   end
 
-  def set_move(board, human, square)
-    if square == ''
-      board[board.unmarked_keys.sample] = human.marker
-    else
-      board[square.to_i] = human.marker
-    end
-  end
-
   private
 
   def joinor(unmarked_keys)
@@ -275,11 +271,20 @@ class Human < Player
       unmarked_keys[0..-2].join(', ') + ', or ' + unmarked_keys.last.to_s
     end
   end
+
+  def set_move(board, human, square)
+    if square == ''
+      board[board.unmarked_keys.sample] = human.marker
+    else
+      board[square.to_i] = human.marker
+    end
+  end
 end
 
 class Computer < Player
   def set_name
-    self.name = ['Bishop', 'Chappie', 'Chucky', 'Vision'].sample
+    self.name = ['Bishop', 'C3PO', 'Chappie', 'Chucky', 'Optimus',
+                 'Vision'].sample
   end
 
   def won_round(computer)
@@ -375,7 +380,7 @@ class TTTGame
       game_setup
       game_play
       display_game_result
-      break unless play_again?
+      break unless prompt_play_again?
       reset_game!
       display_play_again_message
     end
@@ -473,9 +478,10 @@ class TTTGame
   def reset_game!
     board.reset!
     Player.reset_scores!(human, computer)
+    computer.set_name
   end
 
-  def play_again?
+  def prompt_play_again?
     answer = nil
     loop do
       puts "Would you like to play again? (y/n)"
