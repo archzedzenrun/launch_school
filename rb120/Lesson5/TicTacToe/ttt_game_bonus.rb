@@ -300,6 +300,8 @@ class Computer < Player
     make_move(board, offensive_win, defensive, offensive, computer_marker)
   end
 
+  private
+
   # rubocop:disable Metrics/MethodLength
   def make_move(board, offensive_win, defensive, offensive, computer_marker)
     if board.squares[5].marker == " "
@@ -315,8 +317,6 @@ class Computer < Player
     end
   end
   # rubocop:enable Metrics/MethodLength
-
-  private
 
   def find_defensive_moves(board, human)
     current_board = board_state(board)
