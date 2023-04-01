@@ -29,10 +29,10 @@ module Displayable
   def display_welcome_message
     clear_screen
     puts "Welcome to Tic Tac Toe!"
-    puts ""
+    new_line
     puts "First to win #{MAX_SCORE} rounds wins the game!"
     puts "Your opponent will be #{computer.name}!"
-    puts ""
+    new_line
   end
 
   def display_first_to_move
@@ -85,7 +85,7 @@ module Displayable
   def display_play_again_message
     clear_screen
     puts "Starting new game..."
-    puts ""
+    new_line
   end
 
   def display_goodbye_message
