@@ -75,7 +75,8 @@ module Displayable
   end
 
   def display_game_result
-    clear_screen
+    clear_screen_display_markers_board
+    display_current_score
     if human.score == MAX_SCORE && computer.score == MAX_SCORE
       puts "Tie game!"
     elsif human.score == MAX_SCORE
@@ -133,7 +134,7 @@ class Board
         return squares.first.marker
       end
     end
-    false
+    nil
   end
 
   def reset!
@@ -202,27 +203,11 @@ class Player
   def assign_marker(marker)
     self.marker = marker
   end
-
-  def self.tie_round(human, computer)
-    human.score += 1
-    computer.score += 1
-    puts "This round is a tie!"
-  end
-
-  def self.reset_scores!(human, computer)
-    human.score = 0
-    computer.score = 0
-  end
 end
 
 class Human < Player
   def set_name
     self.name = prompt_name
-  end
-
-  def won_round(human)
-    self.score += 1
-    puts "#{human.name} won this round!"
   end
 
   def prompt_name
@@ -287,16 +272,11 @@ class Computer < Player
                  'Vision'].sample
   end
 
-  def won_round(computer)
-    self.score += 1
-    puts "#{computer.name} won this round!"
-  end
-
   def calculate_move(board, human)
-    defensive = find_defensive_moves(board, human)
-    offensive = find_offensive_moves(board, human)
-    offensive_win = find_offensive_winning_moves(board)
     computer_marker = marker
+    defensive = defend_and_offensive_win(board, human.marker)
+    offensive = offensive_moves(board, human)
+    offensive_win = defend_and_offensive_win(board, computer_marker)
     make_move(board, offensive_win, defensive, offensive, computer_marker)
   end
 
@@ -318,18 +298,7 @@ class Computer < Player
   end
   # rubocop:enable Metrics/MethodLength
 
-  def find_defensive_moves(board, human)
-    current_board = board_state(board)
-    d_moves = []
-    current_board.each_with_index do |line, idx|
-      if line.count(human.marker) == 2 && line.include?(" ")
-        d_moves << Board::WINNING_LINES[idx][line.index(" ")]
-      end
-    end
-    d_moves.sample
-  end
-
-  def find_offensive_moves(board, human)
+  def offensive_moves(board, human)
     current_board = board_state(board)
     o_moves = []
     current_board.each_with_index do |line, line_idx|
@@ -342,15 +311,15 @@ class Computer < Player
     o_moves.sample
   end
 
-  def find_offensive_winning_moves(board)
+  def defend_and_offensive_win(board, marker)
     current_board = board_state(board)
-    o_winning_moves = []
+    moves = []
     current_board.each_with_index do |line, idx|
       if line.count(marker) == 2 && line.include?(" ")
-        o_winning_moves << Board::WINNING_LINES[idx][line.index(" ")]
+        moves << Board::WINNING_LINES[idx][line.index(" ")]
       end
     end
-    o_winning_moves.sample
+    moves.sample
   end
 
   def board_state(board)
@@ -391,6 +360,10 @@ class TTTGame
 
   def game_setup
     board.reset!
+    assign_player_markers
+  end
+
+  def assign_player_markers
     @human_marker = human.assign_marker(human.prompt_choose_marker)
     random_available_marker = (VALID_MARKERS - [human_marker]).sample
     @computer_marker = computer.assign_marker(random_available_marker)
@@ -421,7 +394,8 @@ class TTTGame
     loop do
       clear_screen_display_markers_board
       player_move
-      round_results
+      increment_scores!
+      display_current_score
       prompt_continue
       break if max_score_reached?
       reset_round!
@@ -446,18 +420,38 @@ class TTTGame
     end
   end
 
-  def round_results
+  def increment_scores!
     clear_screen_display_markers_board
     case board.winning_marker
-    when human.marker    then human.won_round(human)
-    when computer.marker then computer.won_round(computer)
-    else                      Player.tie_round(human, computer)
+    when human.marker    then human_won_round
+    when computer.marker then computer_won_round
+    else                      tie_round
     end
-    display_current_score
+  end
+
+  def human_won_round
+    human.score += 1
+    puts "#{human.name} won this round!"
+  end
+
+  def computer_won_round
+    computer.score += 1
+    puts "#{computer.name} won this round!"
+  end
+
+  def tie_round
+    human.score += 1
+    computer.score += 1
+    puts "This round is a tie!"
   end
 
   def max_score_reached?
     human.score == MAX_SCORE || computer.score == MAX_SCORE
+  end
+
+  def reset_scores!
+    human.score = 0
+    computer.score = 0
   end
 
   def reset_round!
@@ -477,7 +471,7 @@ class TTTGame
 
   def reset_game!
     board.reset!
-    Player.reset_scores!(human, computer)
+    reset_scores!
     computer.set_name
   end
 
