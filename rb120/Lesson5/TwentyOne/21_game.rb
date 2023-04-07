@@ -137,7 +137,7 @@ class Deck
     deck.shuffle
   end
 
-  def deal_card(participant)
+  def deal_card!(participant)
     participant.hand << cards.pop
   end
 end
@@ -268,8 +268,8 @@ class TwentyOne
     pause
     clear_screen
     2.times do
-      deck.deal_card(player)
-      deck.deal_card(dealer)
+      deck.deal_card!(player)
+      deck.deal_card!(dealer)
     end
   end
 
@@ -317,7 +317,7 @@ class TwentyOne
   end
 
   def player_hit
-    deck.deal_card(player)
+    deck.deal_card!(player)
     clear_screen
     puts "#{player.name} chose to hit!"
     blank_line
@@ -347,7 +347,7 @@ class TwentyOne
   end
 
   def dealer_hits
-    deck.deal_card(dealer)
+    deck.deal_card!(dealer)
     pause
     clear_screen
     puts "#{dealer.name} hit!"
