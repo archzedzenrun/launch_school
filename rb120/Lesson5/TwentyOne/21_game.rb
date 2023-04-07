@@ -1,7 +1,7 @@
 MAX_SCORE = 21
 DEALER_MIN = 17
 
-module Displayable
+module Formatable
   def clear_screen
     system('clear')
   end
@@ -17,7 +17,9 @@ module Displayable
   def blank_line
     puts ""
   end
+end
 
+module Displayable
   def display_invalid_name
     clear_screen
     puts "Sorry, name can't be empty or more than 10 characters."
@@ -176,6 +178,7 @@ class Card
 end
 
 class Participant
+  include Formatable
   include Displayable
 
   attr_accessor :name, :hand
@@ -229,6 +232,7 @@ class Dealer < Participant
 end
 
 class TwentyOne
+  include Formatable
   include Displayable
 
   attr_accessor :deck
