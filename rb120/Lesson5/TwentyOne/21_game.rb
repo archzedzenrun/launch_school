@@ -1,3 +1,6 @@
+MAX_SCORE = 21
+DEALER_MIN = 17
+
 module Displayable
   def clear_screen
     system('clear')
@@ -13,6 +16,12 @@ module Displayable
 
   def blank_line
     puts ""
+  end
+
+  def display_invalid_name
+    clear_screen
+    puts "Sorry, name can't be empty or more than 10 characters."
+    small_pause
   end
 
   def display_welcome_message
@@ -179,14 +188,14 @@ class Participant
   def hand_total
     total = hand.map(&:value).sum
     hand.select(&:ace?).count.times do
-      break if total <= 21
+      break if total <= MAX_SCORE
       total -= 10
     end
     total
   end
 
   def busted?
-    hand_total > 21
+    hand_total > MAX_SCORE
   end
 end
 
@@ -200,6 +209,7 @@ class Player < Participant
   def prompt_name
     your_name = ' '
     loop do
+      clear_screen
       puts 'What is your name?'
       your_name = gets.chomp
       break unless your_name.strip == '' || your_name.size > 10
@@ -240,15 +250,15 @@ class TwentyOne
   private
 
   def prompt_rules?
-    answer = nil
+    input = nil
     loop do
       puts 'Would you like to view the rules? (y/n)'
-      answer = gets.chomp.downcase
-      break if ['y', 'n'].include?(answer)
+      input = gets.chomp.downcase
+      break if ['y', 'n'].include?(input)
       clear_screen
       display_invalid_input
     end
-    answer == 'y'
+    input == 'y'
   end
 
   def play
@@ -294,16 +304,20 @@ class TwentyOne
   end
 
   def prompt_player_move
-    answer = nil
+    input = nil
     loop do
       display_hit_stay
-      answer = gets.to_i
-      break if [1, 2].include?(answer)
+      input = gets.to_f
+      break if [1, 2].include?(input) && whole_num?(input)
       clear_screen
       display_participant_hands
       display_invalid_input
     end
-    answer
+    input
+  end
+
+  def whole_num?(input)
+    input % input.to_i == 0
   end
 
   def player_stay
@@ -328,7 +342,7 @@ class TwentyOne
   def dealer_turn
     loop do
       dealer.display_hand
-      if dealer.hand_total >= 17 && !dealer.busted?
+      if dealer.hand_total >= DEALER_MIN && !dealer.busted?
         dealer_stays
         break
       else
@@ -392,15 +406,15 @@ class TwentyOne
   end
 
   def play_again?
-    answer = nil
+    input = nil
     loop do
       blank_line
       puts 'Would you like to play again? (y/n)'
-      answer = gets.chomp.downcase
-      break if ['y', 'n'].include?(answer)
+      input = gets.chomp.downcase
+      break if ['y', 'n'].include?(input)
       display_invalid_input
     end
-    answer == 'y'
+    input == 'y'
   end
 end
 
