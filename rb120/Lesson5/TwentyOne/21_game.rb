@@ -15,12 +15,6 @@ module Displayable
     puts ""
   end
 
-  def display_invalid_name
-    clear_screen
-    puts "Sorry, name can't be empty or more than 10 characters."
-    small_pause
-  end
-
   def display_welcome_message
     clear_screen
     puts "Hello #{player.name}, welcome to Twenty One!"
@@ -41,9 +35,20 @@ module Displayable
   end
 
   def display_participant_hands
-    dealer.display_initial_hand
+    dealer.display_initial_dealer_hand
     puts '--------------------'
     player.display_hand
+  end
+
+  def display_initial_dealer_hand
+    puts "#{name} reveals one card, the #{hand[0].rank} of #{hand[0].suit}"
+    puts "Total: #{hand[0].value}"
+  end
+
+  def display_hand
+    puts "#{name}'s hand:"
+    hand.each { |card| puts "#{card.rank} of #{card.suit}" }
+    puts "Total: #{hand_total}"
   end
 
   def display_hit_stay
@@ -211,11 +216,6 @@ class Player < Participant
 end
 
 class Dealer < Participant
-  def display_initial_hand
-    puts "#{name} reveals one card, the #{hand[0].rank} of #{hand[0].suit}"
-    puts "Total: #{hand[0].value}"
-  end
-
   private
 
   def set_name
