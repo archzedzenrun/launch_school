@@ -185,12 +185,6 @@ class Participant
     total
   end
 
-  def display_hand
-    puts "#{name}'s hand:"
-    hand.each { |card| puts "#{card.rank} of #{card.suit}" }
-    puts "Total: #{hand_total}"
-  end
-
   def busted?
     hand_total > 21
   end
