@@ -297,7 +297,7 @@ class TwentyOne
   def player_turn
     loop do
       move = prompt_player_move
-      if move == 2
+      if move == '2'
         player_stay
         break
       else
@@ -311,8 +311,8 @@ class TwentyOne
     input = nil
     loop do
       display_hit_stay
-      input = gets.to_f
-      break if [1, 2].include?(input) && whole_num?(input)
+      input = gets.chomp
+      break if ['1', '2'].include?(input)
       clear_screen
       display_participant_hands
       display_invalid_input
