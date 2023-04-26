@@ -434,8 +434,8 @@ structure).
 <strong>What are collaborator objects? Why are they important in OOP?</strong>
 
 Collaborator objects are objects stored within another object's instance
-variables, which make up that object's state. They are important because it
-helps to reduce dependencies which improves flexibility and maintainability.
+variables, which make up that object's state. They are important because they
+help improves flexibility and maintainability.
 
 <strong>What are fake operators?</strong>
 
