@@ -4,42 +4,47 @@
 
 **Classes and objects**
 
-Anything that has some sort of value is an object. (Methods, blocks, and variables are not objects).
 
-Classes act as a blueprint from which objects are created and each object will have unique data associated with it, known as an objects "State" which are tracked via instance variables. Classes define instance methods that all instances of the class can interact with.
 
-New objects are instantiated by invoking the `new` method on a class.
+Classes act as a blueprint from which objects are created. They define attributes and behaviors that those objects can interact with.
 
-The constructor method is automatically invoked when an object is instantiated.
+Objects are created from classes and each object will have unique data associated with it known as "State", which is tracked via instance variables.
 
 <br>
 
 **Encapsulation**
 
-Is the concept of protecting data by creating boundaries or hiding certain pieces of code from the rest of the program which ensures that changes are made with obvious intention. This is accomplished through the creation of objects, which encapsulate state. Classes encapsulate behaviors (methods) that expose information when interacting with those objects.
+Is the concept of protecting data by hiding certain pieces of code from the rest of the program, which ensures that changes to code are made with obvious intention.
 
+This is accomplished through the creation of objects (which encapsulate state) and methods (which are encapsulated by classes) that expose information when interacting with those objects.
 
-**Method access control** is a form of encapsulation that exposes the state of objects through the public interface (methods) of a class. Access modifiers are used to determine method accessibility. Public methods are accessible by any part of the program that knows the class or object names and all methods (besides the constructor method) are public by default.
+<br>
 
-Private methods are only accessible from within the class by the calling object.
+**Method access control**
+Method access control is a form of encapsulation that uses access modifiers to determine method accessibility.
 
-Protected methods are only accessible from within the class by the calling object and other instances of the same class.
+Demonstrates encapsulation because we are using access modifiers to restrict method access from the public interface.
 
-Note: subclasses have access to private and protected methods higher up in the inheritance chain.
+Private methods are only accessible by the calling object from within the class or its subclasses.
+
+Protected methods are only accessible from within the class or its subclasses by the calling object and other instances of the same class.
+
+Public methods are accessible by any part of the program that knows the class or object names. All methods (besides the constructor method) are public by default.
+
 ```ruby
-class Person
-  def initialize(name, age)
+class Cat
+  def initialize(name, color)
     @name = name
-    @age = age
+    @color = color
   end
 
   def get_name
     name
   end
 
-  def get_age(other_person)
-    puts age
-    puts other_person.age
+  def get_name(other)
+    puts name
+    puts other.name
   end
 
   protected
@@ -67,7 +72,7 @@ puts p1.get_age(p2)
 **Polymorphism**
 
 Describes how objects of different types are able to respond to
-a common interface (methods). Polymorphism can be achieved through
+methods with the same name. Polymorphism can be achieved through
 inheritance (class and interface) and duck-typing.
 
 **Class Inheritance** is when classes inherit behaviors from a superclass.
@@ -135,7 +140,7 @@ end
 # while Cat, Lizard, and Fish objects have access to swim through class inheritance.
 
 ```
-**Duck-typing** describes how unrelated object types from different classes
+**Duck-typing** describes how different unrelated object types
 respond to methods with the same names.
 ```ruby
 class Person
@@ -165,6 +170,7 @@ end
 
 -Used for module methods which are methods whose names are prepended with `self` and are invoked on the module itself.
 
+-Modules don't inherit from anything
 <br>
 
 **Getter and Setter methods**
@@ -235,7 +241,7 @@ puts Vehicle.new.wheels # => 4
 ```
 **Constants**
 
-Constants are used to store information that will never change. Constants are lexically scoped, meaning they are available for use within the structure that they are defined. When a constant is referenced, Ruby will first search the lexical scope of the reference. If the constant is not found, the next place Ruby looks is up the inheritance chain of the structure of the reference. If the constant is still not found, Ruby will then look in the top level scope. When constant references are made using the namespace resolution operator, the top level scope will not be searched.
+Constants are used to store information that will never change. Constants are lexically scoped, meaning they are available depending on where they are defined. When a constant is referenced, Ruby will first search the lexical scope of the reference. If the constant is not found, the next place Ruby looks is up the inheritance chain of the structure of the reference. If the constant is still not found, Ruby will then look in the top level scope. When constant references are made using the namespace resolution operator, the top level scope will not be searched.
 Note: Constants defined in classes and modules can be directly referenced from outside the structure by using `::`, the namespace resolution operator.
 ```ruby
 TOP_WHEELS = 6
@@ -319,7 +325,7 @@ How objects are compared using the `==` method is determined by how its defined 
 
 **Collaborator objects**
 
-Collaborator objects are objects that are stored within another object's instance variables, making up the state of that object. They are important because they help improve flexibility and maintainability.
+Collaborator objects are objects that are stored within another object's instance variables, making up the state of that object. They are important because they help improve flexibility by separating responsibilites across multiple classes.
 ```ruby
 class Person
   def initialize(name)
