@@ -104,12 +104,14 @@ class TodoList
   end
 
   def remove_at(idx)
-    todos.delete(todos.fetch(idx))
+    todo = todos.fetch(idx)
+    todos.delete_at(todos.index(todo))
   end
 
   def to_s
-    puts "---- Today's Todos ----"
-    puts todos
+    text = "---- #{title} ----\n"
+    text << @todos.map(&:to_s).join("\n")
+    text
   end
 
   def each
@@ -162,3 +164,7 @@ todo1 = Todo.new("Buy milk")
 todo2 = Todo.new("Clean room")
 todo3 = Todo.new("Go to gym")
 list = TodoList.new("Today's Todos")
+
+list.add(todo1)
+list.add(todo2)
+list.add(todo3)
