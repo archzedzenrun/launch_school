@@ -34,6 +34,19 @@ def decrypt_rot(str)
   end.join
 end
 
+# def decode(str)
+#   alpha = (1..26).zip('a'..'z').to_h
+#   str.chars.map do |char|
+#     if !alpha.values.include?(char.downcase)
+#       char
+#     else
+#       current_pos = alpha.key(char.downcase) - 13
+#       current_pos = 26 - current_pos.abs if current_pos < 1
+#       char == char.upcase ? alpha[current_pos].upcase : alpha[current_pos]
+#     end
+#   end.join
+# end
+
 names = ['Nqn Ybirynpr', 'Tenpr Ubccre', 'Nqryr Tbyqfgvar', 'Nyna Ghevat',
   'Puneyrf Onoontr', 'Noqhyynu Zhunzznq ova Zhfn ny-Xujnevmzv',
   'Wbua Ngnanfbss', 'Ybvf Unvog', 'Pynhqr Funaaba', 'Fgrir Wbof',
