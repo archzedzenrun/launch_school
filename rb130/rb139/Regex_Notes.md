@@ -177,3 +177,16 @@ The range quantifier is a pair of curly braces `{}` with or or two numbers and a
 
 The above quantifiers are considered greedy, meaning they always match the longest possible string they can. If you need to match the fewest number of characters possible, a lazy match can be requested by adding `?` after the main quantifier.
 
+# Using Regex in Ruby
+
+**Matching Strings**
+
+`=~` is similar to match but returns the index within the string that the regex matched, or nil if there was no match.
+
+**Splitting Strings**
+
+`.split(/\s+/)` is the regex form of the split method.
+
+**Capture Groups**
+
+Capture the matching characters that correspond to part of a regex. Captured values can be accessed with backreferences.
