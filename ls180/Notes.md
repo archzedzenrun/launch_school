@@ -343,4 +343,60 @@ LIKE is case sensitive, use ILIKE for case-insensitive selection.
 
 Note: when making comparisons for NULL, we wouldnt use the normal syntax WHERE column_name = NULL, we would use the special syntax `WHERE column_name IS NULL` or `WHERE column_name IS NOT NULL`.
 
-SELECT burg, side, drink FROM orders WHERE side IS NOT NULL AND drink IS NOT NULL;
+# LIMIT and OFFSET
+
+Pagination is when portions of data are displayed as separate pages, it is built on the LIMIT and OFFSET clauses of SELECT.
+
+We can use LIMIT like this to only return 1 result:
+```
+SELECT * FROM users LIMIT 1;
+
+# This would return the first user in the users table.
+```
+If we wanted to skip the first user but still have a LIMIT of 1 we would need an OFFSET clause which will skip however many specified rows. For example:
+```
+SELECT * FROM users LIMIT 1 OFFSET 2;
+
+# This would skip the first 2 rows and return the 3rd.
+```
+**Distinct** is a qualifier used to deal with duplication. We can use it as part of a SELECT query to only return distinct (unique) values like this:
+```
+SELECT DISTINCT full_name FROM users;
+
+# Duplicate full_name values wont be returned.
+```
+It could be used together with an SQL function (in this case count) like this:
+```
+SELECT count(DISTINCT full_name) FROM users;
+```
+# Functions
+
+Functions are sets of commands that perform operations on fields or data. These operations can include data transformation. Here are some common types of functions:
+* **String** - Perform operations on values of the String data type. For example: `SELECT length(full_name) FROM users;` (length being the function).
+* **Date/Time** - Perform operations on values of the Date/Time data type. Most take time or timestamp inputs. For example: date_part is a function that returns a specific part of a timestamp: `SELECT full_name, date_part('year', last_login) FROM users;` Another example is the age function which is passed a timestamp as an argument and returns the time elapsed from the argument to the current time: `SELECT full_name, age(last_login) FROM users;`.
+* **Aggregate** - Perform aggregation (produces a single value from a group of values). For example: the count function `SELECT count(id) FROM users;`. sum, min, max, avg are some others.
+
+Instead of something like `SELECT count(id) FROM users WHERE enabled = true;` we can use the **GROUP BY** clause to count the values of true and false like this: `SELECT enabled, count(id) FROM USERS GROUP BY enabled`. If a column is selected (like "enabled"), it must be part of the GROUP BY clause. (unless its part of an aggretate function like count(id)).
+
+# Updating data
+
+An UPDATE statement can be written like this:
+```
+UPDATE table_name
+SET column_name = value, ...
+WHERE expression;
+
+# The WHERE clause is optional (all rows will be updated if omitted).
+```
+
+# Deleting data
+
+DELETE statement removes entire rows from a table. It can be done like this:
+```
+DELETE FROM table_name WHERE expression;
+
+# If the WHERE clause is omitted, ALL rows will be deleted.
+```
+DELETE can only delete one or more entire rows, while UPDATE can update one or more rows within one or more columns.
+
+# Table relationships
