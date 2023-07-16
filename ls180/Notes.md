@@ -400,3 +400,35 @@ DELETE FROM table_name WHERE expression;
 DELETE can only delete one or more entire rows, while UPDATE can update one or more rows within one or more columns.
 
 # Table relationships
+
+Normalization is the process of splitting up data to remove duplication and improve data integerity. We can accomplish normalization by spreading data out across multiple tables and defining relationships between them.
+
+**Database Design**
+
+Database design involves defining entities that represent data and designing relationships between them. An entitiy represents a set of data, which can usually be identified as the major nouns of the system.
+
+An Entitiy Relationship Diagram (ERD) is a visual representation of entities and their relationships with each other.
+
+**Keys** are how the different relationships between entities are implemented in the table schema. Keys are a type of constraint that can be used to identify a specif row in the current table or another table. There are two types of keys: Primary and Foreign.
+
+A **primary key** is a unique identifier for a row. A column must contain some data that is unique to each row. This is similar to a column having NOT NULL and UNIQUE constraints.
+
+Note: A table can only have one primary key (commonly named id).
+
+A **foreign key** lets us associate a row in one table with a row in another table and is done by setting a column in one table as a foreign key and having that column reference another tables primary key column. This is implemented using the REFERENCES keyword like this:
+```
+FOREIGN KEY (fk_col_name)
+REFERENCES target_table_name (pk_col_name);
+```
+Entity relationships can be classified as:
+* **one-to-one** exists between two entities where a particular entity in one table can have only one entity associated with it in another table.
+* **one-to-many** exists between two entities where an entity instance in one table can be associated with multiple instances in the other table.
+* **many-to-many** exists between two entities where multiple instances in one entity can have multiple instances in the other entity.
+
+**Referential Integrity** is a concept that states that table relationships must be consistent, meaning constraints in one table enforce the type of relationship we want between the two entities. For example, if there is a one-to-one relationship between two entities, a second row cant be added if the primary key has already been assigned to a column.
+
+The ON DELETE clause means if a row being referenced is deleted, the referencing row is also deleted. In PostgreSQL, having no ON DELETE clause will thrown an error if we try to delete that row.
+
+# SQL Joins
+
+JOIN is a clause that handles queries across more than one table.
