@@ -431,4 +431,20 @@ The ON DELETE clause means if a row being referenced is deleted, the referencing
 
 # SQL Joins
 
-JOIN is a clause that handles queries across more than one table.
+JOIN is a clause that handles queries across more than one table. JOINS link two tables together usually based on the keys that define the relationships between the tables.
+
+```
+# JOIN syntax
+
+SELECT table_nameN.column_name, ...
+       FROM table_name1
+       join_type JOIN table_name2
+                 ON join_condition;
+```
+
+Types of JOINs:
+* **INNER**
+* **LEFT OUTER**
+* **RIGHT OUTER**
+* **FULL OUTER**
+* **CROSS**
