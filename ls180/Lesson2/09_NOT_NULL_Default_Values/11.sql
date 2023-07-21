@@ -1,0 +1,1 @@
+--pg_dump -d sql-course -t weather --inserts > dump.sql

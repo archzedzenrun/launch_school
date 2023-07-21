@@ -1,0 +1,1 @@
+--A result value of NULL (absence of value).
