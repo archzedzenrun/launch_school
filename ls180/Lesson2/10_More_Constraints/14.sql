@@ -1,0 +1,2 @@
+--The constraint appears as a check constraint with a name "valid_director"
+--And the conditions it checks for.

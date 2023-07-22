@@ -1,0 +1,1 @@
+--\d "table_name" will list all the constraints of a table.

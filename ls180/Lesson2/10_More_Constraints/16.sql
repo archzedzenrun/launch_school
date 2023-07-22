@@ -1,0 +1,2 @@
+--Column data type
+--Column constraints (NOT NULL, CHECK, etc.)
