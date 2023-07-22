@@ -1,0 +1,1 @@
+--Import from within the psql console: \i file.sql
