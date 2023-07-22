@@ -1,0 +1,3 @@
+--Data Manipulation Language (DML)
+--Data Control Language (DCL)
+--Data Definition Language (DDL)

@@ -1,0 +1,1 @@
+--SQL is a special purpose language used to interact with relational databases.
