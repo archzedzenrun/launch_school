@@ -1,0 +1,1 @@
+--Modality describes if a relationship is required or optional.
