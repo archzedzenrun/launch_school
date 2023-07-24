@@ -1,0 +1,1 @@
+--Conceptual schema is a high level overview of the relationships of entities.
