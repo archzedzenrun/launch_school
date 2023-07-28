@@ -1,0 +1,1 @@
+--inserting an explicit NULL value will result in NULL for that column.

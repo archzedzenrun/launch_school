@@ -1,0 +1,1 @@
+SELECT round(avg(max_weight_kg), 2) FROM animals;

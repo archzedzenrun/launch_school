@@ -1,0 +1,2 @@
+SELECT name FROM countries
+  WHERE population BETWEEN 70000000 AND 200000000;
