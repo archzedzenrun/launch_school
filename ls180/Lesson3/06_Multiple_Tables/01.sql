@@ -1,0 +1,1 @@
+\i theater_full.sql
