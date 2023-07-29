@@ -1,0 +1,1 @@
+--False, use NOT NULL constraint to prevent columns from allowing NULL values.
