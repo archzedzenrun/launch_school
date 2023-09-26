@@ -1,0 +1,1 @@
+// error since foo variable is not defined in scope
