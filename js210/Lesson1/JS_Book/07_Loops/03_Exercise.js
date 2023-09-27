@@ -1,0 +1,1 @@
+// The loop condition is variable assignment which returns the value of the assignment, in this case 1. So the while condition is essentially saying "while 1" which will always be evaluated as true, resulting in an infinite loop.
