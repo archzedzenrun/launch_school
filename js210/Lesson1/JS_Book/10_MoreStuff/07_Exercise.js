@@ -1,0 +1,1 @@
+// Exception handling is a way of managing errors by using the try/catch statement.
