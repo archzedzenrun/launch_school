@@ -1,0 +1,1 @@
+// The whitespace at the end of line 5 after the backslash causes a SyntaxError.
