@@ -1,0 +1,1 @@
+// Since global variables are accessible from within an inner scope, myVar is accessible from within someFunction and outputs 'This is global' after JS doesnt find a local variable with that name.

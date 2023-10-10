@@ -1,0 +1,1 @@
+// Since there is no variable declaration before the variable assignment on line 2, it is treated similar to a global object and is available in the global scope so line 6 logs 'This is global'.

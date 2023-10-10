@@ -1,0 +1,1 @@
+// This code will log 7 because parameter a shadows the global variable named a, which means any changes to a inside the function will only affect that locally scoped variable.

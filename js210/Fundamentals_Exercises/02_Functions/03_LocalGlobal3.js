@@ -1,0 +1,1 @@
+// The invocation of someFunction reassigns global variable myVar to 'This is local' which is what is logged. This is because variables in the global scope are accessible from within an inner scope.

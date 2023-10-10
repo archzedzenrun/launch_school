@@ -1,0 +1,1 @@
+// This will log undefined. Variables declarations are hoisted to the top of their scope in the program and those declared with var will have a value of undefined.

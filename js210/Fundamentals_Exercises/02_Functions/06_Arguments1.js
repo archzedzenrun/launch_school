@@ -1,0 +1,1 @@
+// This will log 7. Numbers are primitive values which means they are immutable and no operation within a function will have any effect on the value.

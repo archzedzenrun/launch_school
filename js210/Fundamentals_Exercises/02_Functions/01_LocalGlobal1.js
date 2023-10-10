@@ -1,0 +1,1 @@
+// Line 8 will output 'This is global' because the myVar declaration on line 4 is scoped to the function and has no effect on the myVar variable in the global scope.

@@ -1,0 +1,1 @@
+// This code logs [1, 2, 10] because arrays are mutable objects. Parameter b in the myValue function and global variable a are both pointing to the same array object which is mutated in the function by incrementing the element at index 2 by 7.
