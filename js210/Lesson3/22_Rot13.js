@@ -56,3 +56,24 @@ console.log(rot13(rot13(testString)) === testString);
 
 let fox = "the quick brown fox jumps over the lazy dog.";
 console.log(rot13(fox) === "gur dhvpx oebja sbk whzcf bire gur ynml qbt.");
+
+// Alt solution
+
+// const ROT_VALUE = 13;
+// const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
+
+// function rotateChar(char) {
+//   if (/[^a-zA-Z]/.test(char)) return char;
+//   let charIdx = ALPHABET.indexOf(char.toLowerCase());
+//   let encodedIdx = charIdx < ROT_VALUE ? charIdx + ROT_VALUE : charIdx - ROT_VALUE
+//   return ALPHABET[encodedIdx];
+// }
+
+// function rot13(string) {
+//   return string.split('').map(function(char) {
+//     let newChar = rotateChar(char);
+//     return char === char.toUpperCase() ? newChar.toUpperCase() : newChar;
+//   }).join('');
+// }
+
+// console.log(rot13('Teachers open the door, but you must enter by yourself.'));
