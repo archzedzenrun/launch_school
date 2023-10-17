@@ -1,0 +1,3 @@
+/*
+myArray and myOtherArray are both pointing to the same array object which means the result of the mutating pop method on line 4 will be reflected in both variables which is why lines 5 and 6 both log [1, 2, 3]. On line 8 myArray is reassigned to [1, 2]. Reassignment is a non mutating action so now myArray is pointing to a new array object and myOtherArray is unaffected. Line 9 logs [1, 2] and line 10 logs [1, 2, 3].
+*/
