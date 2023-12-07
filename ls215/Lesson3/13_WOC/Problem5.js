@@ -124,23 +124,19 @@ function populateRails(message, rails) {
   message.split('').forEach(char => {
     if (index === rails.length - 1) {
       increment = false;
-    } else if (index === 0 && increment === false) {
+    } else if (index === 0) {
       increment = true;
     }
 
     rails[index].push(char);
-    if (increment) {
-      index += 1;
-    } else {
-      index -= 1;
-    }
+    increment ? index += 1 : index -= 1;
   });
 
   return rails;
 }
 
 function railFenceEncoder(message, numberOfRails) {
-  if (numberOfRails === 1) {
+  if (numberOfRails < 2) {
     return message;
   }
 
@@ -203,25 +199,21 @@ function decodeRails(rails, messageSize) {
   while (decodedString.length < messageSize) {
     if (railsIndex === rails.length - 1) {
       increment = false;
-    } else if (railsIndex === 0 && increment === false) {
+    } else if (railsIndex === 0) {
       increment = true;
     }
 
     decodedString += rails[railsIndex][0];
     rails[railsIndex].splice(0, 1);
 
-    if (increment) {
-      railsIndex += 1;
-    } else {
-      railsIndex -= 1;
-    }
+    increment ? railsIndex += 1 : railsIndex -= 1;
   }
 
   return decodedString
 }
 
 function railFenceDecoder(encodedMessage, numberOfRails) {
-  if (numberOfRails === 1) {
+  if (numberOfRails < 2) {
     return encodedMessage;
   }
 
