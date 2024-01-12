@@ -1,0 +1,1 @@
+// No, the array referenced by the variable `array` is part of the closure returned from the makeArrays function.

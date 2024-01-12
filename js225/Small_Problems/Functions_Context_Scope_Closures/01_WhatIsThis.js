@@ -1,0 +1,1 @@
+// NaN because outside of a function, 'this' refers to the global object where firstName and lastName are undefined.
