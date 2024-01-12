@@ -29,3 +29,5 @@ let computer = {
 };
 
 console.log(computer.total());
+
+// We call the sepcialDiscount function with the context of the computer object to get the discounted price.
