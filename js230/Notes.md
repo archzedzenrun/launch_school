@@ -143,3 +143,32 @@ The `stopPropagation()` method tells the browser to stop bubbling the event up t
 Callbacks are functions passed as arguments to another function. Callbacks are a way to deal with asynchronous code, meaning code can start at one point and finish at another without stopping the execution flow of the program.
 
 Nesting callbacks makes code hard to read, maintain and debug. Functions should be named and separated into smaller reusable pieces to help with these issues.
+
+**Promises**
+
+These are objects representing asynchronous operations that will happen at some point and produce a value.
+
+Promises have three states:
+* Pending - initial, not yet completed
+* Fulfilled - completed successfully, has a resulting value
+* Rejected - operation failed, has an error
+
+Promises are created using the Promise constructor which takes a function called the executor. The executor runs automatically when the promise is created. It has two arguments `resolve` and `reject`.
+
+`.then()` method is called when a promise has been fulfilled. A function can be passed as a callback for the result.
+
+`.catch()` method catches the error if a promise is rejected. A function can also be passed to it.
+
+`finally()` method runs after the promise is settled, regardless of the outcome. Typically used for cleanup actions.
+
+Promise API methods:
+* Promise.all() - used for running operations in parallel and waiting for them all to complete. It takes an array of promises and returns a single promise containing the resolve values of each promise (in order).
+* Promise.race() - It takes an array of promises and returns the value of the resolved promise that settles first (fulfilled or rejected).
+* Promise.allSettled() - It takes an array of promises adn returns an array of objects describing the outcome of each promise.
+* Promise.any() - It takes an array of promises and returns the value of the first promise that resolves. If all promises are rejected, the returned promise is rejected with an AggregateError.
+
+**Async/Await**
+
+`async` is added to functions, telling them to return a promise whether you explicitly return a promise or not. The return value is wrapped in a promise.
+
+`await` is used inside async functions to pause code on that line until the promise fulfills, before returning the resulting value.
