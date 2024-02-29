@@ -6,22 +6,22 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
     <script>
       $(function() {
-      $('form').on('submit', function(event) {
-        event.preventDefault();
-        let input = $(this).find("input[type=text]");
-        $(document).off('keypress').on('keypress', function(event2) {
-          if (event2.key !== input.val()) {
-            return;
-          }
-          
-          $('a').trigger('click');
+        $('form').on('submit', function(event) {
+          event.preventDefault();
+          let input = $(this).find("input[type=text]");
+          $(document).off('keypress').on('keypress', function(event2) {
+            if (event2.key !== input.val()) {
+              return;
+            }
+            
+            $('a').trigger('click');
+          })
         })
-      })
-      
-      $('a').on('click', function(event) {
-        event.preventDefault();
-        $('#accordion').slideToggle();
-      })
+        
+        $('a').on('click', function(event) {
+          event.preventDefault();
+          $('#accordion').slideToggle();
+        })
       });
     </script>
   </head>
