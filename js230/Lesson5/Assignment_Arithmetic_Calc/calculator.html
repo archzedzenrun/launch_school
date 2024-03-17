@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <title>Calculator</title>
+    <meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src="calculator.js"></script>
+    <style>
+      body {
+        background-color: rgb(70, 109, 121);
+        font-size: 24px;
+        text-align: center;
+      }
+
+      #result {
+        font-weight: bold;
+      }
+
+      fieldset {
+        background-color: whitesmoke;
+        border: none;
+        width: fit-content;
+      }
+
+      input {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <fieldset>
+      <p id="result">85</p>
+      <form id="calculator" method="post">
+        <input type="text" size="5">
+        <select>
+          <option value="+">+</option>
+          <option value="-">-</option>
+          <option value="*">*</option>
+          <option value="/">/</option>
+        </select>
+        <input type="text" size="5">
+        <input type="submit" value="=">
+      </form>
+    </fieldset>
+  </body>
+</html>
