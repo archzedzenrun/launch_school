@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <title>Grocery List</title>
+    <meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src="grocerylist.js"></script>
+    <style>
+      body {
+        background-color: rgb(179, 64, 83);
+        font-weight: bold;
+      }
+
+      fieldset {
+        background-color: bisque;
+        border: 0px;
+        width: fit-content;
+        margin: auto;
+      }
+
+      input, label {
+        display: block;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <fieldset>
+      <h2>Add an item</h2>
+      <form action="#" method="post">
+        <label for="name">Item name</label>
+        <input type="text" id="name">
+        <p>
+          <label for="quantity">Quantity</label>
+          <input type="text" id="quantity" size="1" maxlength="2">
+        </p>
+        <p>
+          <input type="submit" id="submit" value="Add">
+        </p>
+      </form>
+      
+      <div>
+        <h1>Groceries</h1>
+        <ul id="list">
+        </ul>
+      </div>
+     
+    </fieldset>
+  </body>
+</html>
