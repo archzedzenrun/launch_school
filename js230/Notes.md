@@ -180,7 +180,9 @@ currentTarget is the element that the event listener is attached to, Target is t
 
 The `stopPropagation()` method stops the event object from continuing on the capturing/bubbling path.
 
-The `preventDefault()` method stops the event from performing its default action.
+The `preventDefault()` method stops the event object from performing its default action. With regards to nested elements: Using the preventDefault method will also prevent the default actions of any other event along the propagation path.
+
+**Event Delegation** is when one or more elements can fire a single event listener that is attached to a common ancestor further up the DOM tree. This technique simplifies code by reducing repetition which improves performance and is made possible through event propagation (capturing and bubbling).
 
 ### Asynchronous techniques
 
@@ -189,6 +191,8 @@ The `preventDefault()` method stops the event from performing its default action
 Callbacks are functions passed as arguments to another function. Callbacks are a way to deal with asynchronous code, meaning code can start at one point and finish at another without stopping the execution flow of the program.
 
 Nesting callbacks makes code hard to read, maintain and debug. Functions should be named and separated into smaller reusable pieces to help with these issues.
+
+Web APIs push callbacks onto a task queue which then pushes the callback onto the stack if it is empty (which then runs the code in the callback)
 
 **Promises**
 
@@ -201,29 +205,51 @@ Promises have three states:
 
 Promises are created using the Promise constructor which takes a function called the executor. The executor runs automatically when the promise is created. It has two arguments `resolve` and `reject`.
 
-`.then()` method is called when a promise has been fulfilled. A function can be passed as a callback for the result.
+`.then()` takes a callback function, the argument passed to 'resolve' in the promise is passed to the callback
 
-`.catch()` method catches the error if a promise is rejected. A function can also be passed to it.
+`.catch()` takes a callback function, the argument passed to 'reject' in the promise is passed to the callback.
 
 `finally()` method runs after the promise is settled, regardless of the outcome. Typically used for cleanup actions.
 
+the 'then' and 'catch' methods can chain promises together.
+
 Promise API methods:
-* Promise.all() - used for running operations in parallel and waiting for them all to complete. It takes an array of promises and returns a single promise containing the resolve values of each promise (in order).
+* Promise.all() - used when you have a set of asynchronous operations that you want to run at the same time. It takes an array of promises and returns one promise containing the resolve values for each promise in the same order that they were provided. If any of the promises in the input array rejects, the returned promise rejects. Note: Non-promise values in the input array are automatically resolved.
+
 * Promise.race() - It takes an array of promises and returns the value of the resolved promise that settles first (fulfilled or rejected).
 * Promise.allSettled() - It takes an array of promises adn returns an array of objects describing the outcome of each promise.
 * Promise.any() - It takes an array of promises and returns the value of the first promise that resolves. If all promises are rejected, the returned promise is rejected with an AggregateError.
 
 **Async/Await**
 
-`async` is added to functions, telling them to return a promise whether you explicitly return a promise or not. The return value is wrapped in a promise.
+`async` is added to functions and wraps the return value in a promise regardless if you explicitly return a promise or not.
 
-`await` is used inside async functions to pause code on that line until the promise fulfills, before returning the resulting value.
+`await` is used inside async functions to pause code on that line until the promise fulfills, before returning the resulting value. try/catch blocks are used for error handling.
+
+async/await best practices:
+* always use await within async functions
+* use try/catch blocks for error handling
+* Promise.all() may be more appropriate than using await in a loop for performance reasons
+* unnecessary use of await can cause delay/performance issues
 
 # Lesson 3
 
 AJAX (Asynchronous JavaScript And XML) requests are when a browser doesnt perform a full page load. Certain parts of data are fetched to update parts of a page.
 
 With AJAX all of the HTTP methods are available for use. HTML `<form>` tag only allows GET and POST. It also gives us better control over the headers and data format of our requests.
+
+XMLHttpRequest is an API provided by browsers in order to send AJAX requests.
+
+Sending requests through XMLHttpRequest mainly involves the following steps:
+
+* Create a new XMLHttpRequest object.
+* Use the open method on the XHR object to specify the method and URL for the request.
+* Use the setRequestHeader method on the XHR object to set headers you'd like to send with the request. Most of the headers will be added by the browser automatically.
+* Use the send method on the XHR object to trigger the whole action and on POST request we can also pass serialized data as an argument.
+* Attach an event handler for the load event to the XHR object to handle the response.
+* Attach an event handler for the error event to the XHR object to handle any connection errors. This is not required but it's a good practice.
+
+
 
 `XMLHttpRequest` methods:
 * open(method, url) - open a connection to url using method, example open(GET, google.com).
@@ -232,7 +258,159 @@ With AJAX all of the HTTP methods are available for use. HTML `<form>` tag only 
 * abort() - cancel active request.
 * getResponseHeader(header) - Return the response value of header.
 
-Properties:
-* timeout, writeable, default 0, max time a request can take to complete in ms.
-* readyState, not writeable, what sate the request is in
-* responseText, not writeable, default null, raw text of response body.
+`XMLHttpRequest` properties:
+* timeout - Maximum time a request can take to complete (in milliseconds)
+* readyState - state the request is in
+* responseText - Raw text of the response's body.
+* response - Parsed content of response, not meaningful in all situations
+
+```js
+let request = new XMLHttpRequest(); // Instantiate new XMLHttpRequest object
+request.open('GET', '/path');       // Set HTTP method and URL on request
+request.send();                     // Send request
+```
+
+During an XMLHttpRequest cycle, one event fires when it sends the request and a second fires when the response loading ends.
+
+* loadstart - fires when request is sent
+* loadend - last event to fire after response loading done and other events have fired
+
+before loadend another event fires based on the request status:
+* load - a complete response loaded
+* abort - request interrupted before completion
+* error - error occurred
+* timeout - response wasnt received before a certain amount of time
+
+Submitting a form using JS:
+* serialize the form data
+
+  When encoding URL POST parameters, a Content-Type header of `application/x-www-form-urlencoded` must be included.
+```js
+let request = new XMLHttpRequest();
+request.open('POST', 'https://lsjs230-book-catalog.herokuapp.com/books');
+
+request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+let data = 'title=Effective%20JavaScript&author=David%20Herman';
+
+request.addEventListener('load', () => {
+  if (request.status === 201) {
+    console.log(`This book was added to the catalog: ${request.responseText}`);
+  }
+});
+
+request.send(data);
+```
+Using Formdata:
+```js
+let form = document.getElementById('form');
+
+form.addEventListener('submit', event => {
+  // prevent the browser from submitting the form
+  event.preventDefault();
+
+  let data = new FormData(form);
+
+  let request = new XMLHttpRequest();
+  request.open(form.method, `https://ls-230-web-store-demo.herokuapp.com/${form.getAttribute('action')}`);
+
+  request.addEventListener('load', () => {
+    if (request.status === 201) {
+      console.log(`This book was added to the catalog: ${request.responseText}`);
+    }
+  });
+
+  request.send(data);
+});
+```
+* send request using XMLHttpRequest
+* handle response
+
+We can use the responseType property to tell the browser how to handle the response. responseType values are text json, arraybuffer, blob, document.
+```js
+let request = new XMLHttpRequest();
+request.open('GET', 'https://api.github.com/repos/rails/rails');
+request.responseType = 'json';
+
+request.addEventListener('load', event => {
+  // request.response will be the result of parsing the JSON response body
+  // or null if the body couldn't be parsed or another error
+  // occurred.
+
+  let data = request.response;
+});
+
+request.send();
+```
+
+Sending JSON via XHR
+
+* Serialize data into valid JSON
+```js
+let request = new XMLHttpRequest();
+request.open('POST', 'https://lsjs230-book-catalog.herokuapp.com/books');
+
+let data = { title: 'Eloquent JavaScript', author: 'Marijn Haverbeke' };
+let json = JSON.stringify(data);
+
+request.send(json);
+```
+
+* Send request using XMLHttpRequest with a Content-Type: application/json; charset=utf-8 header
+
+```js
+let request = new XMLHttpRequest();
+request.open('POST', 'https://lsjs230-book-catalog.herokuapp.com/books');
+
+request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+
+let data = { title: 'Eloquent JavaScript', author: 'Marijn Haverbeke' };
+let json = JSON.stringify(data);
+
+request.send(json);
+```
+
+* Handle response
+
+CORS (Cross-Origin Resource Sharing) is a specification that the browser and server must follow in order to communicate when accessing resources across origins. Applications use custom HTTP requests and response headers in order to let the two systems know enough about each other to complete the request.
+
+The Origin header is checked by the server and determines if the origin of the requester should be allowed to receive the response. The response includes a header Access-Control-Allow-Origin if it does.
+
+# Lesson 4
+
+### jQuery
+
+DOM Ready Callback is a function passed to .ready and executes after the document finishes loading (doesnt wait for the browser to load img tags, may need to use $(window).ready())
+```js
+$(document).ready(function() {
+  // DOM loaded and ready, referenced image on img tags are not ready
+});
+
+// DOM ready callback can be shortened to:
+$(function() {
+
+})
+```
+
+The `.css` method is used to change style attributes `content.css('font-size', '18px');`
+
+Some property setting methods such as .css are referred to as getter and setter methods. omitting the last argument in .css `content.css('font-size')` acts as a getter method for the font-size property.
+
+the width and height methods act as getter and setters 
+```js
+var width = $content.width();  // 800 (getter)
+$content.width(width / 2);     // Sets to 400
+console.log($content.width()); // now 400 (getter)
+```
+
+most jQuery methods return an objec that allows for chaining method calls together like this:
+```js
+$content.css('font-size', '18px').css('color', '#b00b00');
+```
+we can also use an object argument like this:
+```js
+$content.css({
+  'font-size': '18px',
+  color: '#b00b00'
+});
+```
