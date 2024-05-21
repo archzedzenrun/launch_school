@@ -1,0 +1,1 @@
+const colorsArr: string[] = ['red', 'green', 'blue'];
